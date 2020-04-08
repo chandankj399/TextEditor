@@ -1,6 +1,7 @@
 package editor.TextEditor;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -33,6 +34,7 @@ public class UserInterface extends JFrame implements Observer {
 	private static final long serialVersionUID = 1L;
 	private JTabbedPane tabbedPane = null;
 	private MenuBar menubar = null;
+//	private KeyHandler keyHandler = null;
 	private ArrayList<JTextArea> textAreaList;
 
 	public UserInterface() {
@@ -47,6 +49,7 @@ public class UserInterface extends JFrame implements Observer {
 	private void createComponents() {
 		textAreaList = new ArrayList<JTextArea>();
 		menubar = new MenuBar(this);
+//		keyHandler = new KeyHandler(menubar);
 		tabbedPane = new JTabbedPane();
 		setJMenuBar(menubar);
 		add(tabbedPane);
@@ -80,16 +83,18 @@ public class UserInterface extends JFrame implements Observer {
 		textArea.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(
-						Model.getInstance().getTextArea().getSelectionColor());
+						Color.YELLOW);
 				if (e.getClickCount() == 2) {
-					menubar.getFindReplace().searchAll(Model.getInstance().getTextArea().getSelectedText(), painter);
-
+					String selectedText = Model.getInstance().getTextArea().getSelectedText();
+					if (selectedText != null) {
+						menubar.searchAll(selectedText, painter);
+					}
 				} else {
 					Model.getInstance().getTextArea().getHighlighter().removeAllHighlights();
 				}
 			}
-
 		});
+//		textArea.addKeyListener(keyHandler);
 		textAreaList.add(textArea);
 
 		JScrollPane scrollPane = new JScrollPane(textArea);
